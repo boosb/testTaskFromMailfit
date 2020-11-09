@@ -1,0 +1,214 @@
+@import "libs";
+@import "global";
+@import "fonts";
+@import "animation";
+
+
+.main-page{
+    padding-top: 40px;
+    background-color: #4C71CA;
+    height: 100vh;
+}
+
+.wrapper{
+    margin-left: 95px;
+}
+
+.title{
+    font-weight: 800;
+    font-size: 36px;
+    line-height: 53px;
+}
+
+.menu{
+    margin-top: 20px;
+    &__list-item{
+        display: inline-block;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all .5s;
+        &+.menu__list-item{
+            margin-left: 15px;
+        }
+        &:hover{
+            background-color: #A5BEFF;
+        }
+    }
+}
+
+.slider-wrap{
+    position: relative;
+    width: 1365px;
+    margin: 15px 0 0 0px;
+}
+
+.swiper-container{
+    width: 1195px;
+    height: 560px;
+}
+
+.swiper-slide{
+    display: flex;
+
+    //position: absolute;
+    height: 250px;
+    //min-width: 570px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 15px 30px 15px 0;
+    //margin-bottom: 15px;
+    //margin-top: 15px;
+    //filter: drop-shadow(0px 4px 30px rgba(0, 0, 0, 0.25));
+    /*&:hover{
+        min-width: 570px;
+    }*/
+    &__img{
+        position: relative;
+        border-radius: 8px;
+        height: 250px;
+        min-width: 170px;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        &::before{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+            border: none;
+            border-radius: 8px;
+        }
+    }
+    &__sity{
+        position: absolute;
+        font-weight: 800;
+        bottom: 38px;
+        left: 12px;
+        z-index: 2;
+    }
+    &__country{
+        position: absolute;
+        bottom: 17px;
+        left: 12px;
+        z-index: 2;
+    }
+    &__text{
+        position: absolute;
+        left: -190px;
+        display: none;
+        opacity: 0;
+        //transform: translate3d(-190px, 0, 0);
+        width: 170px;
+        
+    }
+    &:hover .swiper-slide__text{
+        left: 0;
+        display: block;
+        width: 300px;
+        margin: 20px 30px 15px 30px;
+        line-height: 140%;
+        animation: anima1 1s linear normal;
+        opacity: 1;
+    }
+    &__btn{
+        display: none;
+        opacity: 0;
+        position: absolute;
+        left: -170px;
+        bottom: 22px;
+    }
+    &:hover .swiper-slide__btn{
+        left: 0px;
+        display: block;
+        font-weight: 800;
+        font-size: 16px;
+        line-height: 24px;
+        padding: 13px 21px;
+        border: 2px solid #fff;
+        border-radius: 8px;
+        margin-left: 30px;
+        transition: all 0.5s;
+        cursor: pointer;
+        animation: anima2 1s linear normal;
+        opacity: 1;
+        &:hover{
+            background-color: #0047FE;
+            border-color: #0047FE;
+        }
+    }
+    &:hover .swiper-slide__descr{
+        position: absolute;
+        z-index: 3;
+        left: 170px;
+        top: 0;
+        height: 250px;
+        display: block;
+        min-width: 403px;
+        background-color: #254595;
+        border: none;
+        border-radius: 0 8px 8px 0;
+        animation: anima 1s linear reverse;
+    }
+    &:hover .swiper-slide__img{
+        border-radius: 8px 0 0 8px;
+    }
+    &:hover .swiper-slide__img::before{
+        border-radius: 8px 0 0 8px;
+    }
+}
+
+.special{
+    display: none;
+}
+
+.swiper-btn-prev,
+.swiper-btn-next{
+    position: absolute;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 50%;
+    top: 50%;
+    margin-top: calc(-1 * var(--swiper-navigation-size) / 2);
+    cursor: pointer;
+    outline: none;
+    &::before,
+    &::after{
+        content: "";
+        position: absolute;
+        height: 4px;
+        width: 15px;
+        left: 13px;
+        background-color: #fff;
+        transform-origin: left;
+    }
+    &::after{
+        transform: rotate(42deg);
+        top: 17px;
+    }
+    &::before{
+        transform: rotate(-42deg);
+        top: 19px;
+    }
+    &:hover{
+        background-color: #0047FF;
+    }
+    &.swiper-button-disabled{
+        display: none;
+    }
+}
+
+.swiper-btn-next{
+    right: 0;
+    transform: rotate(180deg);
+}
+
+
+@import "media";
