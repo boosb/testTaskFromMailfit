@@ -36,6 +36,18 @@
         &:hover{
             background-color: #A5BEFF;
         }
+        &.show{
+            background-color: #80A0F2;
+        }
+    }
+    &__phone-arrow{
+        display: none;
+    } 
+    &__phone-arrow-active{
+        display: none;
+    }
+    &__phone-active-item{
+        display: none;
     }
 }
 
@@ -46,26 +58,16 @@
 }
 
 .swiper-container{
-    width: 1195px;
+    width: 1175px;
     height: 560px;
 }
 
 .swiper-slide{
-    display: flex;
-
-    //position: absolute;
     height: 250px;
-    //min-width: 570px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     margin: 15px 30px 15px 0;
-    //margin-bottom: 15px;
-    //margin-top: 15px;
-    //filter: drop-shadow(0px 4px 30px rgba(0, 0, 0, 0.25));
-    /*&:hover{
-        min-width: 570px;
-    }*/
     &__img{
         position: relative;
         border-radius: 8px;
@@ -151,7 +153,7 @@
         top: 0;
         height: 250px;
         display: block;
-        min-width: 403px;
+        min-width: 400px;
         background-color: #254595;
         border: none;
         border-radius: 0 8px 8px 0;
@@ -163,6 +165,24 @@
     &:hover .swiper-slide__img::before{
         border-radius: 8px 0 0 8px;
     }
+    &:hover.swiper-slide-show-left .swiper-slide__img{
+        border-radius: 0 8px 8px 0;
+    }
+    &:hover.swiper-slide-show-left .swiper-slide__img::before{
+        border-radius: 0 8px 8px 0;
+    }  
+    &:hover.swiper-slide-show-left .swiper-slide__descr{
+        position: absolute;
+        z-index: 3;
+        left: -400px;
+        height: 250px;
+        display: block;
+        background-color: #254595;
+        border: none;
+        border-radius:  8px 0 0 8px;
+        animation: anima4 1s linear normal  ;
+    }
+          
 }
 
 .special{

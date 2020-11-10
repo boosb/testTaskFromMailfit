@@ -17,15 +17,24 @@
       <div class="wrapper">
         <div class="title">Наши направления</div>
         <div class="menu">
+          <div class="menu__phone-active-item show">Все страны</div>
           <ul class="menu__list">
-            <li class="menu__list-item" id="all">Все страны</li>
-            <li class="menu__list-item" id="italy">Италия</li>
-            <li class="menu__list-item" id="germany">Германия</li>
-            <li class="menu__list-item" id="greece">Греция</li>
-            <li class="menu__list-item" id="turkey">Турция</li>
-            <li class="menu__list-item" id="spain">Испания</li>
-            <li class="menu__list-item" id="portugal">Португалия</li>
+            
+            <li class="menu__list-item " id="all"><a>Все страны</a></li>
+            <li class="menu__list-item " id="italy"><a>Италия</a></li>
+            <li class="menu__list-item " id="germany">Германия</li>
+            <li class="menu__list-item " id="greece">Греция</li>
+            <li class="menu__list-item " id="turkey">Турция</li>
+            <li class="menu__list-item " id="spain">Испания</li>
+            <li class="menu__list-item " id="portugal">Португалия</li>
+            
+            <div class="menu__phone-arrow-active">
+              <img src="images/arrow.svg" alt="">
+            </div>
           </ul>
+          <div class="menu__phone-arrow">
+            <img src="images/arrow.svg" alt="">
+          </div>
         </div>
       </div>
       <div class="slider-wrap">
@@ -60,6 +69,7 @@
                 <button class="swiper-slide__btn">Подробнее</button>
               </div>
             </div>
+            
             <div class="swiper-slide germany">
               <div class="swiper-slide__img" style="background-image: url(images/gallery-2.jpg);">
                 <div class="swiper-slide__sity">Фрайбург</div>
@@ -74,7 +84,7 @@
                 <button class="swiper-slide__btn">Подробнее</button>
               </div>
             </div>
-            
+          
             <div class="swiper-slide turkey">
               <div class="swiper-slide__img" style="background-image: url(images/gallery-8.jpg);">
                 <div class="swiper-slide__sity">Каш</div>
@@ -188,7 +198,7 @@
                 <button class="swiper-slide__btn">Подробнее</button>
               </div>
             </div>
-            <div class="swiper-slide italy">
+            <div class="swiper-slide italy ">
               <div class="swiper-slide__img" style="background-image: url(images/gallery-12.jpg);">
                 <div class="swiper-slide__sity">Венеция</div>
                 <div class="swiper-slide__country">Италия</div>
@@ -288,9 +298,9 @@
             </div>
           </div>
 
-          <!-- If we need pagination
+          <!-- If we need pagination-->
           <div class="swiper-pagination"></div>
-          -->
+          
           <!-- If we need navigation buttons -->
           <!--
             <div class="swiper-btn-prev"></div>
