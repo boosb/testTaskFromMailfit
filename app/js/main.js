@@ -22,7 +22,7 @@ var swiper = new Swiper('.swiper-container', {
             pagination: {
                 el: '.swiper-pagination',
                 clickable: true,
-              }
+            }
         },
         375: {
             slidesPerView: 2,
@@ -30,10 +30,12 @@ var swiper = new Swiper('.swiper-container', {
             pagination: {
                 el: '.swiper-pagination',
                 clickable: true,
-              }
+            }
         }
     }
 });
+
+swiper.allowTouchMove = false;
 
 const slide = document.querySelectorAll('.swiper-slide'),
     italy = document.querySelectorAll('.italy'),
@@ -57,34 +59,96 @@ const slide = document.querySelectorAll('.swiper-slide'),
 
     phoneArrow = document.querySelector('.menu__phone-arrow'),
     phoneArrowActive = document.querySelector('.menu__phone-arrow-active'),
-    menuList = document.querySelector('.menu__list');
+    menuList = document.querySelector('.menu__list'),
+    activeItems = document.querySelector('.menu__phone-active-item');
 
 
 //let wrapperStr = wrapper.getAttribute('style');
 let wrapperStr;
+let countPhone = 2;
+let countTablet = 2;
 
 function createAttribute() {
-    for (let i=0; i < slide.length; i++) {
+    for (let i = 0; i < slide.length; i++) {
         let styleStr = slide[i].getAttribute('style');
-        let newStyleStr = styleStr + ' display: flex;'
+        let newStyleStr = styleStr + ' display: flex;';
         slide[i].setAttribute('style', newStyleStr);
-        if (i === 8 || i ===9 || i ===10 || i ===11) {
+        if (i === 8 || i === 9 || i === 10 || i === 11) {
             slide[i].classList.add('swiper-slide-show-left');
         }
     }
 }
 
-createAttribute();
+function createAttributePhone() {              //функция для создания структуры сетки в телефоне
+    for (let i = 0; i < slide.length; i++) {
+        let styleStr = slide[i].getAttribute('style');
+        let newStyleStr = styleStr + ' display: flex;';
+        slide[i].setAttribute('style', newStyleStr);
+    }
+    slide[0].classList.add('swiper-slide--show-left');
+    slide[1].classList.add('swiper-slide--show-left');
+    slide[2].classList.add('swiper-slide--show-right');
+    slide[3].classList.add('swiper-slide--show-right');
+}
 
-for (let i=0; i < slide.length; i++) {
-    slide[i].onclick = function(){
-        slide[i].classList.add('mobile');
+function createAttributePhoneLeftRight(countPhone) {     //тестовая функция для создания структуры сетки в телефоне
+    console.log(countPhone)
+    slide[countPhone].classList.add('swiper-slide--show-left');
+    slide[countPhone + 1].classList.add('swiper-slide--show-left');
+    slide[countPhone + 2].classList.add('swiper-slide--show-right');
+    slide[countPhone + 3].classList.add('swiper-slide--show-right');
+}
+
+function createAttributeTablet() {              //функция для создания структуры сетки на планшете
+    for (let i = 0; i < slide.length; i++) {
+        let styleStr = slide[i].getAttribute('style');
+        let newStyleStr = styleStr + ' display: flex;';
+        slide[i].setAttribute('style', newStyleStr);
+    }
+}
+
+window.onload = function() {
+    if (window.innerWidth >= 1440) {
+        createAttribute();
+    } else if (window.innerWidth <= 767) {
+        createAttributePhone();
+        swiper.on('slideNextTransitionStart', function () {
+
+            createAttributePhoneLeftRight(countPhone);
+            countPhone += 2;
+            eventCreate();
+        })
+        
+        swiper.on('slidePrevTransitionStart', function () {
+        
+            createAttributePhoneLeftRight(countPhone);
+            countPhone -= 2;
+            eventCreate();
+        })
+    } else if (window.innerWidth < 1440 && window.innerWidth > 767){
+        createAttributeTablet();
+        slide[0].classList.add('swiper-slider--active');
+        
+        swiper.on('slideNextTransitionStart', function (){
+            for (let i=0; i< slide.length; i++) {
+                slide[i].classList.remove('swiper-slider--active');
+            }
+            slide[countTablet].classList.add('swiper-slider--active');
+            countTablet += 2;
+        })
+        swiper.on('slidePrevTransitionStart', function (){
+            for (let i=0; i< slide.length; i++) {
+                slide[i].classList.remove('swiper-slider--active');
+            }
+            slide[countTablet].classList.add('swiper-slider--active');
+            countTablet -= 2;
+        })
     }
 }
 
 function createArrayVisibiliti() {
     let arr = [];
-    for (let i=0; i < slide.length; i++) {
+    for (let i = 0; i < slide.length; i++) {
         slide[i].classList.remove('swiper-slide-show-left');
         if (slide[i].getAttribute('style').indexOf('display: none') === -1) {
             arr.push(slide[i]);
@@ -95,8 +159,8 @@ function createArrayVisibiliti() {
 
 function addedClassShowLeft() {
     let arr = createArrayVisibiliti();
-    for (let j=0; j < arr.length; j++) {
-        if (j === 8 || j ===9 || j ===10 || j ===11) {
+    for (let j = 0; j < arr.length; j++) {
+        if (j === 8 || j === 9 || j === 10 || j === 11) {
             arr[j].classList.add('swiper-slide-show-left');
         }
     }
@@ -104,13 +168,12 @@ function addedClassShowLeft() {
 
 function checkButton() {
     let arr = createArrayVisibiliti();
-    
+
     if (arr.length < 12) {
         next.classList.add('swiper-button-disabled');
         prev.classList.add('swiper-button-disabled');
     } else {
         next.classList.remove('swiper-button-disabled');
-        //prev.classList.remove('swiper-button-disabled');
     }
 }
 
@@ -119,21 +182,20 @@ function parser() {
         rezult = 0,
         widthStr = slide[0].style.width;
     for (let i = 0; i < slide.length; i++) {
-        //console.log(slide[i].style.display)
         if (slide[i].getAttribute('style').indexOf('display: none') === -1) {
             count += 1;
         }
     }
 
-    widthNum = Number(widthStr.slice(0, widthStr.length-2));
+    widthNum = Number(widthStr.slice(0, widthStr.length - 2));
     rezult = Math.ceil(count / 2) * widthNum;
     return rezult + 'px';
 }
 
-prev.onclick = function() {
+prev.onclick = function () {
     for (let i = 0; i < slide.length; i++) {
-        let labelOne = slide[i-2],
-            labelTwo = slide[i -1],
+        let labelOne = slide[i - 2],
+            labelTwo = slide[i - 1],
             labelOneDel = slide[i + 2],
             labelTwoDel = slide[i + 3];
         if (slide[i].classList.contains('swiper-slide-show-left') === true) {
@@ -163,42 +225,46 @@ next.onclick = function () {
 }
 
 all.onclick = function () {
-    for (let i = 0; i < country.length; i++) {
-        country[i].classList.remove('show');
+    if (window.innerWidth >= 1440) {
+        for (let i = 0; i < country.length; i++) {
+            country[i].classList.remove('show');
+        }
     }
+
     all.classList.add('show');
-    for (let i = 0; i < italy.length; i++) {
+    for (let i = 0; i < italy.length; i++) { 
         italy[i].style.display = 'flex';
     }
-    for (let i = 0; i < greece.length; i++) {
+    for (let i = 0; i < greece.length; i++) {  
         greece[i].style.display = 'flex';
     }
-    for (let i = 0; i < germany.length; i++) {
+    for (let i = 0; i < germany.length; i++) { 
         germany[i].style.display = 'flex';
     }
-    for (let i = 0; i < turkey.length; i++) {
+    for (let i = 0; i < turkey.length; i++) { 
         turkey[i].style.display = 'flex';
     }
-    for (let i = 0; i < spain.length; i++) {
+    for (let i = 0; i < spain.length; i++) { 
         spain[i].style.display = 'flex';
     }
-    for (let i = 0; i < portugal.length; i++) {
+    for (let i = 0; i < portugal.length; i++) { 
         portugal[i].style.display = 'flex';
     }
     checkButton();
-    //wrapper.style.width = '1785px';
 
-    wrapper.style.width = parser();
-    wrapperStr = 'width: ' + parser() +';';
-    wrapper.setAttribute('style', wrapperStr);
+    wrapper.style.width = parser(); 
+
+    wrapperStr = 'width: ' + parser() + ';';
+    wrapper.setAttribute('style', wrapperStr); 
 
     addedClassShowLeft();
 }
 
 italyMenu.onclick = function () {
-    
-    for (let i = 0; i < country.length; i++) {
-        country[i].classList.remove('show');
+    if (window.innerWidth >= 1440) {
+        for (let i = 0; i < country.length; i++) {
+            country[i].classList.remove('show');
+        }
     }
     italyMenu.classList.add('show');
     for (let i = 0; i < italy.length; i++) {
@@ -222,14 +288,16 @@ italyMenu.onclick = function () {
     }
     checkButton();
     wrapper.style.width = parser();
-    wrapperStr = 'width: ' + parser() +';';
+    wrapperStr = 'width: ' + parser() + ';';
     wrapper.setAttribute('style', wrapperStr);
     addedClassShowLeft();
 }
 
 germanyMenu.onclick = function () {
-    for (let i = 0; i < country.length; i++) {
-        country[i].classList.remove('show');
+    if (window.innerWidth >= 1440) {
+        for (let i = 0; i < country.length; i++) {
+            country[i].classList.remove('show');
+        }
     }
 
     germanyMenu.classList.add('show');
@@ -253,15 +321,18 @@ germanyMenu.onclick = function () {
     }
     checkButton();
     wrapper.style.width = parser();
-    wrapperStr = 'width: ' + parser() +';';
+    wrapperStr = 'width: ' + parser() + ';';
     wrapper.setAttribute('style', wrapperStr);
     addedClassShowLeft();
 }
 
 greeceMenu.onclick = function () {
-    for (let i = 0; i < country.length; i++) {
-        country[i].classList.remove('show');
+    if (window.innerWidth >= 1440) {
+        for (let i = 0; i < country.length; i++) {
+            country[i].classList.remove('show');
+        }
     }
+
     greeceMenu.classList.add('show');
     for (let i = 0; i < greece.length; i++) {
         greece[i].style.display = 'flex';
@@ -283,15 +354,18 @@ greeceMenu.onclick = function () {
     }
     checkButton();
     wrapper.style.width = parser();
-    wrapperStr = 'width: ' + parser() +';';
+    wrapperStr = 'width: ' + parser() + ';';
     wrapper.setAttribute('style', wrapperStr);
     addedClassShowLeft();
 }
 
 turkeyMenu.onclick = function () {
-    for (let i = 0; i < country.length; i++) {
-        country[i].classList.remove('show');
+    if (window.innerWidth >= 1440) {
+        for (let i = 0; i < country.length; i++) {
+            country[i].classList.remove('show');
+        }
     }
+
     turkeyMenu.classList.add('show');
     for (let i = 0; i < turkey.length; i++) {
         turkey[i].style.display = 'flex';
@@ -313,14 +387,16 @@ turkeyMenu.onclick = function () {
     }
     checkButton();
     wrapper.style.width = parser();
-    wrapperStr = 'width: ' + parser() +';';
+    wrapperStr = 'width: ' + parser() + ';';
     wrapper.setAttribute('style', wrapperStr);
     addedClassShowLeft();
 }
 
 spainMenu.onclick = function () {
-    for (let i = 0; i < country.length; i++) {
-        country[i].classList.remove('show');
+    if (window.innerWidth >= 1440) {
+        for (let i = 0; i < country.length; i++) {
+            country[i].classList.remove('show');
+        }
     }
     spainMenu.classList.add('show');
     for (let i = 0; i < spain.length; i++) {
@@ -343,15 +419,18 @@ spainMenu.onclick = function () {
     }
     checkButton();
     wrapper.style.width = parser();
-    wrapperStr = 'width: ' + parser() +';';
+    wrapperStr = 'width: ' + parser() + ';';
     wrapper.setAttribute('style', wrapperStr);
     addedClassShowLeft();
 }
 
 portugalMenu.onclick = function () {
-    for (let i = 0; i < country.length; i++) {
-        country[i].classList.remove('show');
+    if (window.innerWidth >= 1440) {
+        for (let i = 0; i < country.length; i++) {
+            country[i].classList.remove('show');
+        }
     }
+
     portugalMenu.classList.add('show');
     for (let i = 0; i < portugal.length; i++) {
         portugal[i].style.display = 'flex';
@@ -373,24 +452,46 @@ portugalMenu.onclick = function () {
     }
     checkButton();
     wrapper.style.width = parser();
-    wrapperStr = 'width: ' + parser() +';';
+    wrapperStr = 'width: ' + parser() + ';';
     wrapper.setAttribute('style', wrapperStr);
     addedClassShowLeft();
 }
 
 //Поехали пилить под мобильнички
 
-phoneArrow.onclick = function() {
-    menuList.classList.add('show');
-    //phoneArrow.classList.add('hidd');
-    for (let i=0; i < country.length; i++) {
-        country[i].classList.add('phone-show');
+phoneArrow.onclick = function () {
+    menuList.classList.toggle('show');
+    phoneArrow.classList.toggle('show');
+
+    for (let i = 0; i < country.length; i++) {
+        country[i].classList.toggle('phone-show');
+    }
+    for (let i = 0; i < slide.length; i++) {
+        slide[i].classList.remove('swiper-slide--mobile-active')
     }
 }
 
-phoneArrowActive.onclick = function() {
-    menuList.classList.remove('show');
-    for (let i=0; i < country.length; i++) {
-        country[i].classList.remove('phone-show');
+
+for (let i = 0; i < slide.length; i++) {
+    slide[i].onclick = function () {
+        slide[i].classList.add('swiper-slide--mobile-active');
+        //console.log(slide[i].classList.contains('swiper-slide--show-right'))
+        if (slide[i].classList.contains('swiper-slide--show-right') === true) {
+            swiper.slideNext();
+        }
     }
 }
+/*
+swiper.on('slideNextTransitionStart', function () {
+
+    createAttributePhoneLeftRight(countPhone);
+    countPhone += 2;
+    eventCreate();
+})
+
+swiper.on('slidePrevTransitionStart', function () {
+
+    createAttributePhoneLeftRight(countPhone);
+    countPhone -= 2;
+    eventCreate();
+})*/
