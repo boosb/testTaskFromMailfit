@@ -1,8 +1,5 @@
 var swiper = new Swiper('.swiper-container', {
-    //slidesPerView: 6,
     slidesPerColumn: 2,
-    //spaceBetween: 15,
-    //slidesOffsetAfter: 30,
     centerSlides: true,
     centerSlidesBounds: true,
     breakpoints: {
@@ -17,7 +14,6 @@ var swiper = new Swiper('.swiper-container', {
         },
         768: {
             slidesPerView: 3,
-            //slidesPerColumn: 2,
             spaceBetween: 10,
             pagination: {
                 el: '.swiper-pagination',
@@ -62,11 +58,21 @@ const slide = document.querySelectorAll('.swiper-slide'),
     menuList = document.querySelector('.menu__list'),
     activeItems = document.querySelector('.menu__phone-active-item');
 
-
-//let wrapperStr = wrapper.getAttribute('style');
 let wrapperStr;
-let countPhone = 2;
-let countTablet = 2;
+
+function createCount() {
+    let widthStr = slide[0].style.width;
+    let widthNum = Number(widthStr.slice(0, widthStr.length - 2));
+
+    return Math.floor((Math.abs(swiper.translate) / widthNum) * 2)
+}
+
+function responseOnSwipe(variable) {
+    for (let i = 0; i < slide.length; i++) {
+        slide[i].classList.remove('swiper-slider--active');
+    }
+    slide[variable].classList.add('swiper-slider--active');
+}
 
 function createAttribute() {
     for (let i = 0; i < slide.length; i++) {
@@ -79,7 +85,7 @@ function createAttribute() {
     }
 }
 
-function createAttributePhone() {              //функция для создания структуры сетки в телефоне
+function createAttributePhone() {
     for (let i = 0; i < slide.length; i++) {
         let styleStr = slide[i].getAttribute('style');
         let newStyleStr = styleStr + ' display: flex;';
@@ -91,15 +97,7 @@ function createAttributePhone() {              //функция для созд�
     slide[3].classList.add('swiper-slide--show-right');
 }
 
-function createAttributePhoneLeftRight(countPhone) {     //тестовая функция для создания структуры сетки в телефоне
-    console.log(countPhone)
-    slide[countPhone].classList.add('swiper-slide--show-left');
-    slide[countPhone + 1].classList.add('swiper-slide--show-left');
-    slide[countPhone + 2].classList.add('swiper-slide--show-right');
-    slide[countPhone + 3].classList.add('swiper-slide--show-right');
-}
-
-function createAttributeTablet() {              //функция для создания структуры сетки на планшете
+function createAttributeTablet() {
     for (let i = 0; i < slide.length; i++) {
         let styleStr = slide[i].getAttribute('style');
         let newStyleStr = styleStr + ' display: flex;';
@@ -107,41 +105,31 @@ function createAttributeTablet() {              //функция для созд
     }
 }
 
-window.onload = function() {
+window.onload = function () {
     if (window.innerWidth >= 1440) {
         createAttribute();
     } else if (window.innerWidth <= 767) {
         createAttributePhone();
         swiper.on('slideNextTransitionStart', function () {
+            let countPhone = createCount();
+            responseOnSwipe(countPhone);
+        })
 
-            createAttributePhoneLeftRight(countPhone);
-            countPhone += 2;
-            eventCreate();
-        })
-        
         swiper.on('slidePrevTransitionStart', function () {
-        
-            createAttributePhoneLeftRight(countPhone);
-            countPhone -= 2;
-            eventCreate();
+            let countPhone = createCount();
+            responseOnSwipe(countPhone);
         })
-    } else if (window.innerWidth < 1440 && window.innerWidth > 767){
-        createAttributeTablet();
+    } else if (window.innerWidth < 1440 && window.innerWidth > 767) {
+        createAttribute();
         slide[0].classList.add('swiper-slider--active');
-        
-        swiper.on('slideNextTransitionStart', function (){
-            for (let i=0; i< slide.length; i++) {
-                slide[i].classList.remove('swiper-slider--active');
-            }
-            slide[countTablet].classList.add('swiper-slider--active');
-            countTablet += 2;
+
+        swiper.on('slideNextTransitionStart', function () {
+            let countTablet = createCount();
+            responseOnSwipe(countTablet);
         })
-        swiper.on('slidePrevTransitionStart', function (){
-            for (let i=0; i< slide.length; i++) {
-                slide[i].classList.remove('swiper-slider--active');
-            }
-            slide[countTablet].classList.add('swiper-slider--active');
-            countTablet -= 2;
+        swiper.on('slidePrevTransitionStart', function () {
+            let countTablet = createCount();
+            responseOnSwipe(countTablet);
         })
     }
 }
@@ -232,30 +220,30 @@ all.onclick = function () {
     }
 
     all.classList.add('show');
-    for (let i = 0; i < italy.length; i++) { 
+    for (let i = 0; i < italy.length; i++) {
         italy[i].style.display = 'flex';
     }
-    for (let i = 0; i < greece.length; i++) {  
+    for (let i = 0; i < greece.length; i++) {
         greece[i].style.display = 'flex';
     }
-    for (let i = 0; i < germany.length; i++) { 
+    for (let i = 0; i < germany.length; i++) {
         germany[i].style.display = 'flex';
     }
-    for (let i = 0; i < turkey.length; i++) { 
+    for (let i = 0; i < turkey.length; i++) {
         turkey[i].style.display = 'flex';
     }
-    for (let i = 0; i < spain.length; i++) { 
+    for (let i = 0; i < spain.length; i++) {
         spain[i].style.display = 'flex';
     }
-    for (let i = 0; i < portugal.length; i++) { 
+    for (let i = 0; i < portugal.length; i++) {
         portugal[i].style.display = 'flex';
     }
     checkButton();
 
-    wrapper.style.width = parser(); 
+    wrapper.style.width = parser();
 
     wrapperStr = 'width: ' + parser() + ';';
-    wrapper.setAttribute('style', wrapperStr); 
+    wrapper.setAttribute('style', wrapperStr);
 
     addedClassShowLeft();
 }
