@@ -31,7 +31,7 @@ var swiper = new Swiper('.swiper-container', {
     }
 });
 
-//swiper.allowTouchMove = false;
+swiper.allowTouchMove = false;
 
 const slide = document.querySelectorAll('.swiper-slide'),
     italyMenu = document.getElementById('italy'),
@@ -61,35 +61,26 @@ function createCount() {
     return Math.floor((Math.abs(swiper.translate) / widthNum) * 2)
 }
 //функция для добавления добавления первому слайду нужного класса
-function responseOnSwipe() {
-    let item = createCount();
+function responseOnSwipe(variable) {
     for (let i = 0; i < slide.length; i++) {
-        slide[i].classList.remove('slide--active');
+        slide[i].classList.remove('swiper-slider--active');
     }
-    if (slide[item].classList.contains('no-active') === false) {
-        slide[item].classList.add('slide--active');
-        console.log(1)
-        return item;
-    } else {
-        for (let i=0; i < slide.length; i++) {
-            //slide[i].classList.remove('slide--active');
-            if(slide[i].classList.contains('no-active') === false) {
-                slide[i].classList.add('slide--active');
-                console.log(i)
-                return i;
-            }
+    slide[variable].classList.add('swiper-slider--active');
+}
+//функция для создания нужной структуры классов на десктопе
+function createAttribute() {
+    for (let i = 0; i < slide.length; i++) {
+        if (i === 8 || i === 9 || i === 10 || i === 11) {
+            slide[i].classList.add('swiper-slide-show-left');
         }
     }
 }
-
-//функция динамического изменения классов
+//функция для динамического изменения структуры классов на десктопе
 function addedClassShowLeft() {
-    let item = responseOnSwipe();
-    for (let i = item; i < item + 12; i++) {
-        if (i === item + 8 || i === item + 9 || i === item + 10 || i === item + 11) {   
-            slide[i].classList.add('swiper-slide-show-left');
-        } else {
-            slide[i].classList.remove('swiper-slide-show-left');
+    let arr = createArrayVisibiliti();
+    for (let j = 0; j < arr.length; j++) {
+        if (j === 8 || j === 9 || j === 10 || j === 11) {
+            arr[j].classList.add('swiper-slide-show-left');
         }
     }
 }
@@ -108,33 +99,43 @@ function createAttributeTablet() {
 }
 
 window.onload = function () {
-    slide[0].classList.add('slide--active');
     if (window.innerWidth >= 1440) {
-        addedClassShowLeft();
+        createAttribute();
+        slide[0].classList.add('swiper-slider--active');
         swiper.on('slideNextTransitionStart', function () {
-            addedClassShowLeft();
+            let countPhone = createCount();
+            responseOnSwipe(countPhone);
         })
 
         swiper.on('slidePrevTransitionStart', function () {
-            addedClassShowLeft();
-        })
-    } else if (window.innerWidth < 1440 && window.innerWidth > 767) {
-
-        swiper.on('slideNextTransitionStart', function () {
-            responseOnSwipe();
-        })
-        swiper.on('slidePrevTransitionStart', function () {
-            responseOnSwipe();
+            let countPhone = createCount();
+            responseOnSwipe(countPhone);
         })
     } else if (window.innerWidth <= 767) {
         createAttributePhone();
         swiper.on('slideNextTransitionStart', function () {
-            responseOnSwipe();
+            let countPhone = createCount();
+            responseOnSwipe(countPhone);
         })
 
         swiper.on('slidePrevTransitionStart', function () {
-            responseOnSwipe();
+            let countPhone = createCount();
+            responseOnSwipe(countPhone);
         })
+    } else if (window.innerWidth < 1440 && window.innerWidth > 767) {
+        //createAttribute();
+        slide[0].classList.add('swiper-slider--active');
+
+        swiper.on('slideNextTransitionStart', function () {
+            let countTablet = createCount();
+            responseOnSwipe(countTablet);
+        })
+        swiper.on('slidePrevTransitionStart', function () {
+            let countTablet = createCount();
+            responseOnSwipe(countTablet);
+        })
+    } else if (window.innerWidth <= 767){
+
     }
 }
 //функция для определения необходимости видимости стрелок слайдера 
@@ -178,30 +179,62 @@ function parser() {
             count += 1;
         }
     }
+
     widthNum = Number(widthStr.slice(0, widthStr.length - 2));
     rezult = Math.ceil(count / 2) * widthNum;
     return rezult + 'px';
 }
 
+prev.onclick = function () {
+    for (let i = 0; i < slide.length; i++) {
+        let labelOne = slide[i - 2],
+            labelTwo = slide[i - 1],
+            labelOneDel = slide[i + 2],
+            labelTwoDel = slide[i + 3];
+        if (slide[i].classList.contains('swiper-slide-show-left') === true) {
+            labelOneDel.classList.remove('swiper-slide-show-left');
+            labelOne.classList.add('swiper-slide-show-left');
+            labelTwoDel.classList.remove('swiper-slide-show-left');
+            labelTwo.classList.add('swiper-slide-show-left');
+            break;
+        }
+    }
+}
+
+next.onclick = function () {
+    for (let i = 0; i < slide.length; i++) {
+        let label = slide[i],
+            labelCount = slide[i + 4],
+            labelTwo = slide[i + 1],
+            labelTwoCount = slide[i + 5];
+        if (slide[i].classList.contains('swiper-slide-show-left') === true) {
+            label.classList.remove('swiper-slide-show-left');
+            labelCount.classList.add('swiper-slide-show-left');
+            labelTwo.classList.remove('swiper-slide-show-left');
+            labelTwoCount.classList.add('swiper-slide-show-left');
+            break;
+        }
+    }
+}
 // main loop
 for (let i = 0; i < country.length; i++) {
     country[i].onclick = function () {
         for (let i = 0; i < country.length; i++) {
             country[i].classList.remove('show');
         }
-        if (country[i].getAttribute('id') === 'all') {
+        if (country[i].getAttribute('id') === 'all'){
             for (let i = 0; i < slide.length; i++) {
                 slide[i].classList.remove('no-active');
             }
-            checkButton(); 
+            checkButton();
             addedClassShowLeft();
         } else {
             country[i].classList.add('show');
             showCard(country[i]);
             checkButton();
-            addedClassShowLeft();
             wrapper.style.width = parser();
-            swiper.setTranslate(0);
+            swiper.setTranslate (0);
+            addedClassShowLeft();
         }
     }
 }

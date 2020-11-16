@@ -63,11 +63,15 @@
 }
 
 .swiper-slide{
+    display: flex;
     height: 250px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     margin: 15px 30px 15px 0;
+    &.no-active{
+        display: none !important;
+    }
     &__img{
         position: relative;
         border-radius: 8px;
