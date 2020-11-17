@@ -257,6 +257,7 @@ phoneArrow.onclick = function () {
 for (let i = 0; i < slide.length; i++) {
     slide[i].onclick = function () {
         slide[i].classList.add('swiper-slide--mobile-active');
+        console.log(slide[i].classList.contains('swiper-slide--show-right'))
         if (slide[i].classList.contains('swiper-slide--show-right') === true) {
             swiper.slideNext();
         }

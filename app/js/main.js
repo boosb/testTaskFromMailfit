@@ -60,7 +60,7 @@ function createCount() {
 
     return Math.floor((Math.abs(swiper.translate) / widthNum) * 2)
 }
-//функция для добавления добавления первому слайду нужного класса
+//функция для добавления первому слайду нужного класса
 function responseOnSwipe() {
     let item = createCount();
     for (let i = 0; i < slide.length; i++) {
@@ -68,28 +68,36 @@ function responseOnSwipe() {
     }
     if (slide[item].classList.contains('no-active') === false) {
         slide[item].classList.add('slide--active');
-        console.log(1)
         return item;
     } else {
         for (let i=0; i < slide.length; i++) {
-            //slide[i].classList.remove('slide--active');
             if(slide[i].classList.contains('no-active') === false) {
                 slide[i].classList.add('slide--active');
-                console.log(i)
                 return i;
             }
         }
     }
 }
-
-//функция динамического изменения классов
-function addedClassShowLeft() {
-    let item = responseOnSwipe();
-    for (let i = item; i < item + 12; i++) {
-        if (i === item + 8 || i === item + 9 || i === item + 10 || i === item + 11) {   
-            slide[i].classList.add('swiper-slide-show-left');
+//функция для создания массива видимых слайдов 
+function createArrayVisibiliti() {
+    let arr = [];
+    for (let i = 0; i < slide.length; i++) {
+        if (slide[i].classList.contains('no-active') === false) {
+            arr.push(slide[i]);
+        }
+    }
+    return arr;
+}
+//функция динамического изменения классов на десктопе при прокрутке слайдов
+function addedClassShowLeft(elem) {
+    let arrayCard = createArrayVisibiliti();
+    for (let i = elem; i < elem+12; i++) {
+        if (i === elem+8 || i === elem+9 || i === elem+10 || i === elem+11) {   
+            arrayCard[i].classList.add('swiper-slide--show-left');
+        } else if(arrayCard[i] === undefined) {
+            break
         } else {
-            slide[i].classList.remove('swiper-slide-show-left');
+            arrayCard[i].classList.remove('swiper-slide--show-left');
         }
     }
 }
@@ -101,30 +109,54 @@ function createAttributePhone() {
     slide[3].classList.add('swiper-slide--show-right');
 }
 //функция для создания нужной структуры классов на планшете
-function createAttributeTablet() {
-    for (let i = 0; i < slide.length; i++) {
+function createAttributeTablet(elem) {
+    let arrayCard = createArrayVisibiliti();
+    for (let i = elem; i < elem+6; i++) {
+        if (arrayCard[i] === undefined) {
+            continue
+        } else if (i === elem+2 || i === elem+3) {
+            arrayCard[i].classList.add('swiper-slide--column-two');
+            arrayCard[i].classList.remove('swiper-slide--column-three');
+        } else if (i === elem+4 || i === elem+5) {
+            arrayCard[i].classList.add('swiper-slide--column-three');
+            arrayCard[i].classList.remove('swiper-slide--column-two');
+        } else {
+            arrayCard[i].classList.remove('swiper-slide--column-three');
+            arrayCard[i].classList.remove('swiper-slide--column-two');
+        }
+    }
+}
 
+function cleanClassForTablet() {
+    for (let i=0; i<slide.length; i++) {
+        slide[i].classList.remove('swiper-slide--mobile-active');
     }
 }
 
 window.onload = function () {
     slide[0].classList.add('slide--active');
     if (window.innerWidth >= 1440) {
-        addedClassShowLeft();
+        addedClassShowLeft(responseOnSwipe());
         swiper.on('slideNextTransitionStart', function () {
-            addedClassShowLeft();
+            addedClassShowLeft(responseOnSwipe());
         })
 
         swiper.on('slidePrevTransitionStart', function () {
-            addedClassShowLeft();
+            addedClassShowLeft(responseOnSwipe());
         })
     } else if (window.innerWidth < 1440 && window.innerWidth > 767) {
-
+        createAttributeTablet(responseOnSwipe());
+        for(let i=slide.length-1; i > slide.length-5; i--) {
+            slide[i].classList.add('swiper-slide--show-left');
+        }
         swiper.on('slideNextTransitionStart', function () {
-            responseOnSwipe();
+            createAttributeTablet(responseOnSwipe());
+            cleanClassForTablet();
+            console.log(swiper.el)
         })
         swiper.on('slidePrevTransitionStart', function () {
-            responseOnSwipe();
+            createAttributeTablet(responseOnSwipe());
+            cleanClassForTablet();
         })
     } else if (window.innerWidth <= 767) {
         createAttributePhone();
@@ -137,24 +169,14 @@ window.onload = function () {
         })
     }
 }
-//функция для определения необходимости видимости стрелок слайдера 
-function createArrayVisibiliti() {
-    let arr = [];
-    for (let i = 0; i < slide.length; i++) {
-        slide[i].classList.remove('swiper-slide-show-left');
-        if (slide[i].classList.contains('no-active') === false) {
-            arr.push(slide[i]);
-        }
-    }
-    return arr;
-}
 //функция добавление/удаления кнопок навигации слайдера 
 function checkButton() {
     let arr = createArrayVisibiliti();
-
     if (arr.length < 12) {
         next.classList.add('swiper-button-disabled');
         prev.classList.add('swiper-button-disabled');
+        /*next.setAttribute('aria-disabled', 'true')
+        console.log(next, prev)*/
     } else {
         next.classList.remove('swiper-button-disabled');
     }
@@ -170,36 +192,46 @@ function showCard(item) {
 }
 // функция считает необходимую ширину для swiper-wrapper из учета количества активных слайдов
 function parser() {
-    let count = 0,
+    let arrayCard = createArrayVisibiliti(),
         rezult = 0,
         widthStr = slide[0].style.width;
-    for (let i = 0; i < slide.length; i++) {
-        if (slide[i].classList.contains('no-active') === false) {
-            count += 1;
-        }
-    }
     widthNum = Number(widthStr.slice(0, widthStr.length - 2));
-    rezult = Math.ceil(count / 2) * widthNum;
+    rezult = Math.ceil(arrayCard.length / 2) * widthNum;
     return rezult + 'px';
 }
 
 // main loop
 for (let i = 0; i < country.length; i++) {
     country[i].onclick = function () {
-        for (let i = 0; i < country.length; i++) {
-            country[i].classList.remove('show');
-        }
-        if (country[i].getAttribute('id') === 'all') {
-            for (let i = 0; i < slide.length; i++) {
-                slide[i].classList.remove('no-active');
+        if (window.innerWidth >= 1440) {
+            for (let i = 0; i < country.length; i++) {
+                country[i].classList.remove('show');
             }
-            checkButton(); 
-            addedClassShowLeft();
-        } else {
             country[i].classList.add('show');
-            showCard(country[i]);
-            checkButton();
-            addedClassShowLeft();
+            if (country[i].getAttribute('id') === 'all') {
+                for (let i = 0; i < slide.length; i++) {
+                    slide[i].classList.remove('no-active');
+                }
+                addedClassShowLeft(0);
+                checkButton();
+            } else {
+                showCard(country[i]);
+                addedClassShowLeft(0);
+                checkButton();
+            }
+            wrapper.style.width = parser();
+            swiper.setTranslate(0);
+        } else if (window.innerWidth < 1440 && window.innerWidth > 767) {
+            if (country[i].getAttribute('id') === 'all') {
+                for (let i = 0; i < slide.length; i++) {
+                    slide[i].classList.remove('no-active');
+                }
+                createAttributeTablet(0);
+                
+            } else {
+                showCard(country[i]);
+                createAttributeTablet(0);
+            }
             wrapper.style.width = parser();
             swiper.setTranslate(0);
         }
@@ -220,12 +252,23 @@ phoneArrow.onclick = function () {
     }
 }
 
-
 for (let i = 0; i < slide.length; i++) {
     slide[i].onclick = function () {
-        slide[i].classList.add('swiper-slide--mobile-active');
-        if (slide[i].classList.contains('swiper-slide--show-right') === true) {
-            swiper.slideNext();
+        cleanClassForTablet();
+        slide[i].classList.toggle('swiper-slide--mobile-active');
+        if (slide[i].classList.contains('swiper-slide--column-two') === true && slide[i].classList.contains('swiper-slide--show-left') === true) {
+            swiper.slidePrev(300, false);
+            createAttributeTablet(responseOnSwipe());
+        } else if (slide[i].classList.contains('swiper-slide--column-three') === true && slide[i].classList.contains('swiper-slide--show-left') === true) {
+            createAttributeTablet(responseOnSwipe());
+        } else if (slide[i].classList.contains('swiper-slide--column-two') === true) {
+            swiper.slideNext(300, false);
+            createAttributeTablet(responseOnSwipe());
+        } else if (slide[i].classList.contains('swiper-slide--column-three') === true) {
+            swiper.slideNext(300, false);
+            swiper.slideNext(300, false);
+            createAttributeTablet(responseOnSwipe());
         }
+
     }
 }

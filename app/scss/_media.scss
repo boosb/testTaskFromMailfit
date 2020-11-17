@@ -14,6 +14,9 @@
         margin-left: 5px;
         margin-right: 5px;
     }
+    .swiper-slide{
+        margin: 10px 30px 10px 0;
+    }
     .swiper-pagination{
         bottom: 10px;
     }
@@ -34,7 +37,51 @@
     .swiper-slide.swiper-slide--mobile-active .swiper-slide__descr{
         display: block;
         min-width: 395px;
-    }    
+        animation: anima-tablet 1s linear reverse;
+    }
+    .swiper-slide:hover.swiper-slide--show-left .swiper-slide__descr{
+        left: -395px;
+        animation: anima4-phone 1s linear normal;
+    }
+    .swiper-slide:hover .swiper-slide__img {
+        border-radius: 8px;
+        &::before{
+            border-radius: 8px; 
+        }
+    }
+    .swiper-slide.swiper-slide--mobile-active .swiper-slide__img::before{
+        border-radius: 8px 0 0 8px
+    }
+    .swiper-slide.swiper-slide--mobile-active .swiper-slide__img{
+        border-radius: 8px 0 0 8px
+    }
+    .swiper-slide.swiper-slide--mobile-active .swiper-slide__close-btn {
+        display: block;
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        width: 10px;
+        height: 10px;
+        cursor: pointer;
+        color: transparent;
+        animation: anima-opacity 1s linear normal;
+        &::before,
+        &::after{
+            content: "";
+            width: 15px;
+            height: 1px;
+            background-color: #fff;
+            position: absolute;
+            transform-origin: left;
+        }
+        &::before{
+            transform: rotate(45deg);
+        }
+        &::after{
+            transform: rotate(-45deg);
+            bottom:-1px;
+        }
+    }
 }
 
 @media (max-width: 767px){

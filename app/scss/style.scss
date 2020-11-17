@@ -115,6 +115,9 @@
         width: 170px;
         
     }
+    &__close-btn{
+        display: none;
+    }
     &:hover .swiper-slide__text{
         left: 0;
         display: block;
@@ -169,13 +172,13 @@
     &:hover .swiper-slide__img::before{
         border-radius: 8px 0 0 8px;
     }
-    &:hover.swiper-slide-show-left .swiper-slide__img{
+    &:hover.swiper-slide--show-left .swiper-slide__img{
         border-radius: 0 8px 8px 0;
     }
-    &:hover.swiper-slide-show-left .swiper-slide__img::before{
+    &:hover.swiper-slide--show-left .swiper-slide__img::before{
         border-radius: 0 8px 8px 0;
     }  
-    &:hover.swiper-slide-show-left .swiper-slide__descr{
+    &:hover.swiper-slide--show-left .swiper-slide__descr{
         position: absolute;
         z-index: 3;
         left: -400px;
